@@ -28,7 +28,7 @@ from src.analytics.analytics_helper import (
 
 @st.cache_data
 def load_data() -> pd.DataFrame:
-    """Load the dataset and diagnose missing-file errors."""
+    """Load the processed dataset or process the raw dataset."""
 
     data_path = os.path.join(
         PROJECT_ROOT,
@@ -44,36 +44,20 @@ def load_data() -> pd.DataFrame:
         "insurance_dataset.csv"
     )
 
-    # Display diagnostic information temporarily
-    st.write("### Dataset Diagnostics")
-    st.write("Project root:", PROJECT_ROOT)
-    st.write("Project root exists:", os.path.isdir(PROJECT_ROOT))
-    st.write("Data directory exists:", os.path.isdir(
-        os.path.join(PROJECT_ROOT, "data")
-    ))
-    st.write("Processed dataset path:", data_path)
-    st.write("Processed dataset exists:", os.path.isfile(data_path))
-    st.write("Raw dataset path:", raw_path)
-    st.write("Raw dataset exists:", os.path.isfile(raw_path))
-
     try:
         if os.path.isfile(data_path):
-            df = pd.read_csv(data_path)
-            st.success(f"Loaded processed dataset: {len(df)} rows")
-            return df
+            return pd.read_csv(data_path)
 
         if os.path.isfile(raw_path):
             from src.data_processing.preprocess import engineer_features
 
-            df = engineer_features(pd.read_csv(raw_path))
-            st.success(f"Generated features from raw dataset: {len(df)} rows")
-            return df
+            return engineer_features(pd.read_csv(raw_path))
 
-        st.error("Neither the processed nor raw dataset exists at the paths above.")
+        st.error("Dataset not found. Please verify the data files.")
         return pd.DataFrame()
 
     except Exception as exc:
-        st.error(f"Dataset loading failed: {type(exc).__name__}: {exc}")
+        st.error(f"Unable to load dataset: {type(exc).__name__}: {exc}")
         return pd.DataFrame()
 
 def render_dashboard():
