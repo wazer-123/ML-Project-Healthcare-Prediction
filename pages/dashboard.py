@@ -28,16 +28,53 @@ from src.analytics.analytics_helper import (
 
 @st.cache_data
 def load_data() -> pd.DataFrame:
-    """Load processed dataset with error handling."""
-    data_path = os.path.join(PROJECT_ROOT, 'data', 'processed', 'insurance_processed.csv')
-    if not os.path.exists(data_path):
-        raw_path = os.path.join(PROJECT_ROOT, 'data', 'raw', 'insurance_dataset.csv')
-        if not os.path.exists(raw_path):
-            st.error("⚠️ Dataset not found. Please train models or run data generation pipeline first.")
-            return pd.DataFrame()
-        from src.data_processing.preprocess import engineer_features
-        return engineer_features(pd.read_csv(raw_path))
-    return pd.read_csv(data_path)
+    """Load the dataset and diagnose missing-file errors."""
+
+    data_path = os.path.join(
+        PROJECT_ROOT,
+        "data",
+        "processed",
+        "insurance_processed.csv"
+    )
+
+    raw_path = os.path.join(
+        PROJECT_ROOT,
+        "data",
+        "raw",
+        "insurance_dataset.csv"
+    )
+
+    # Display diagnostic information temporarily
+    st.write("### Dataset Diagnostics")
+    st.write("Project root:", PROJECT_ROOT)
+    st.write("Project root exists:", os.path.isdir(PROJECT_ROOT))
+    st.write("Data directory exists:", os.path.isdir(
+        os.path.join(PROJECT_ROOT, "data")
+    ))
+    st.write("Processed dataset path:", data_path)
+    st.write("Processed dataset exists:", os.path.isfile(data_path))
+    st.write("Raw dataset path:", raw_path)
+    st.write("Raw dataset exists:", os.path.isfile(raw_path))
+
+    try:
+        if os.path.isfile(data_path):
+            df = pd.read_csv(data_path)
+            st.success(f"Loaded processed dataset: {len(df)} rows")
+            return df
+
+        if os.path.isfile(raw_path):
+            from src.data_processing.preprocess import engineer_features
+
+            df = engineer_features(pd.read_csv(raw_path))
+            st.success(f"Generated features from raw dataset: {len(df)} rows")
+            return df
+
+        st.error("Neither the processed nor raw dataset exists at the paths above.")
+        return pd.DataFrame()
+
+    except Exception as exc:
+        st.error(f"Dataset loading failed: {type(exc).__name__}: {exc}")
+        return pd.DataFrame()
 
 def render_dashboard():
     # Hero Title Banner
