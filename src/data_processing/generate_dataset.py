@@ -79,7 +79,7 @@ def generate_insurance_dataset(n_samples: int = 6000, random_state: int = 42) ->
 
     return df
 
-def save_raw_dataset(output_path: str = None, n_samples: int = 6000) -> str:
+def save_raw_dataset(output_path: str | None = None, n_samples: int = 6000) -> str:
     """Generate and save the raw synthetic dataset."""
     if output_path is None:
         base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

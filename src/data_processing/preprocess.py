@@ -47,7 +47,7 @@ def calculate_heuristic_risk_score(age: float, bmi: float, smoker: str, children
     score = 5.0  # baseline health risk
 
     # Smoking factor
-    if str(smoker).lower().strip() == 'yes':
+    if smoker.lower().strip() == 'yes':
         score += 48.0
 
     # BMI factor
@@ -61,7 +61,7 @@ def calculate_heuristic_risk_score(age: float, bmi: float, smoker: str, children
         score += 5.0
 
     # Compound interaction: obese + smoker
-    if str(smoker).lower().strip() == 'yes' and bmi >= 30.0:
+    if smoker.lower().strip() == 'yes' and bmi >= 30.0:
         score += 10.0
 
     # Age factor (18 to 65 mapped to 0 to 18)
@@ -146,7 +146,7 @@ def build_preprocessing_pipeline() -> ColumnTransformer:
     )
     return preprocessor
 
-def run_data_pipeline(raw_path: str = None, processed_path: str = None) -> pd.DataFrame:
+def run_data_pipeline(raw_path: str | None = None, processed_path: str | None = None) -> pd.DataFrame:
     """Execute end-to-end data processing and save processed artifact."""
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     if raw_path is None:
