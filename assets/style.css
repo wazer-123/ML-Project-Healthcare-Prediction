@@ -1,0 +1,235 @@
+/* Google Fonts import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #1e293b;
+}
+
+/* Header & Titles */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', 'Inter', sans-serif !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+}
+
+/* Metric KPI Card Styling */
+.kpi-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    margin-bottom: 12px;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px -2px rgba(2, 132, 199, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+}
+
+.kpi-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #64748b;
+    margin-bottom: 6px;
+}
+
+.kpi-value {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+}
+
+.kpi-sub {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    margin-top: 5px;
+    font-weight: 400;
+}
+
+/* Glassmorphism / Content Panels */
+.glass-panel {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    margin-bottom: 20px;
+}
+
+/* Executive Hero Banner */
+.hero-banner {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #0369a1 100%);
+    border-radius: 14px;
+    padding: 26px 30px;
+    color: #ffffff;
+    margin-bottom: 24px;
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hero-title {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 4px;
+    letter-spacing: -0.03em;
+    font-family: 'Outfit', sans-serif;
+}
+
+.hero-subtitle {
+    font-size: 1.0rem;
+    font-weight: 400;
+    color: #7dd3fc;
+    letter-spacing: 0.02em;
+}
+
+.hero-badge {
+    display: inline-block;
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    color: #bae6fd;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+}
+
+/* Regulatory Disclaimer Notice */
+.disclaimer-card {
+    background-color: #f8fafc;
+    border-left: 4px solid #0284c7;
+    border-radius: 0 8px 8px 0;
+    padding: 12px 18px;
+    font-size: 0.82rem;
+    color: #475569;
+    margin-top: 18px;
+    margin-bottom: 18px;
+    line-height: 1.5;
+}
+
+/* Custom Risk Badges */
+.risk-badge-low {
+    background-color: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 0.82rem;
+    display: inline-block;
+    letter-spacing: 0.03em;
+}
+
+.risk-badge-medium {
+    background-color: #fffbeb;
+    color: #92400e;
+    border: 1px solid #fde68a;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 0.82rem;
+    display: inline-block;
+    letter-spacing: 0.03em;
+}
+
+.risk-badge-high {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 0.82rem;
+    display: inline-block;
+    letter-spacing: 0.03em;
+}
+
+/* Button & Form Control Enhancements */
+.stButton > button {
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 8px 18px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #0f172a;
+    transition: all 0.15s ease;
+}
+
+.stButton > button:hover {
+    border-color: #0284c7;
+    color: #0284c7;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(2, 132, 199, 0.15);
+}
+
+/* Primary Form Action Button */
+div[data-testid="stFormSubmitButton"] > button {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    font-weight: 700 !important;
+    padding: 10px 24px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3) !important;
+}
+
+div[data-testid="stFormSubmitButton"] > button:hover {
+    background: linear-gradient(135deg, #0369a1 0%, #075985 100%) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 16px rgba(2, 132, 199, 0.4) !important;
+}
+
+/* Download Buttons */
+div[data-testid="stDownloadButton"] > button {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    color: #1e293b;
+    font-weight: 600;
+    border-radius: 8px;
+}
+
+div[data-testid="stDownloadButton"] > button:hover {
+    background: #f1f5f9;
+    border-color: #0284c7;
+    color: #0284c7;
+}
+
+/* Streamlit Tabs Navigation Styling */
+div[data-baseweb="tab-list"] {
+    gap: 8px;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 18px;
+}
+
+div[data-baseweb="tab"] {
+    border-radius: 8px 8px 0 0;
+    font-weight: 600;
+    font-size: 0.92rem;
+    padding: 8px 16px;
+    color: #64748b;
+}
+
+div[data-baseweb="tab"][aria-selected="true"] {
+    color: #0284c7;
+    border-bottom: 2px solid #0284c7;
+}
+
+/* Expander Styling */
+div[data-testid="stExpander"] {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    margin-bottom: 12px;
+}

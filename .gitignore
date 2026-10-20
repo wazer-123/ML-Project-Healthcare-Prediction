@@ -1,0 +1,60 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Streamlit logs & cache
+.streamlit/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Ignore model artifacts by default
+models/*.pkl
+models/*.json
+
+# Include artifacts required by the application
+!models/all_models.pkl
+!models/best_model.pkl
+!models/preprocessing_pipeline.pkl
+!models/model_evaluation_report.json
+
+# Generated datasets (reproducible from pipeline — do not commit)
+data/raw/*.csv
+data/processed/*.csv
+
+# IDE-specific
+.vscode/
+.idea/
+*.swp
+*.swo
