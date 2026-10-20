@@ -49,9 +49,7 @@ models/*.json
 !models/preprocessing_pipeline.pkl
 !models/model_evaluation_report.json
 
-# Generated datasets (reproducible from pipeline — do not commit)
-data/raw/*.csv
-data/processed/*.csv
+
 
 # IDE-specific
 .vscode/
