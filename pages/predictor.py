@@ -105,6 +105,20 @@ if get_predictor is not None:
         with st.expander("🧪 Model Loading Status", expanded=True):
 
             st.write(
+                "**Predictor page file:**",
+                os.path.abspath(__file__)
+            )
+
+            st.write(
+                "**Prediction module:**",
+                getattr(
+                    sys.modules.get(predictor.__class__.__module__),
+                    "__file__",
+                    "Module file path unavailable"
+                )
+            )
+
+            st.write(
                 "**Predictor loaded:**",
                 getattr(predictor, "is_loaded", False)
             )
@@ -142,6 +156,32 @@ if get_predictor is not None:
                     os.path.isfile(preprocessor_path)
                 )
 
+            st.write(
+                "**Model object type:**",
+                type(getattr(predictor, "model", None)).__name__
+                if getattr(predictor, "model", None) is not None
+                else "None"
+            )
+
+            st.write(
+                "**Preprocessor object type:**",
+                type(getattr(predictor, "preprocessor", None)).__name__
+                if getattr(predictor, "preprocessor", None) is not None
+                else "None"
+            )
+
+            load_error = getattr(predictor, "load_error", None)
+
+            if load_error:
+                st.error(f"Model loading error: {load_error}")
+            elif not getattr(predictor, "is_loaded", False):
+                st.warning(
+                    "The predictor reports that loading failed, but "
+                    "this version of the prediction module did not "
+                    "provide a load_error attribute. Check the module "
+                    "path above and confirm the updated helper was pushed."
+                )
+
     except Exception as e:
         model_loading_error = str(e)
 
@@ -166,16 +206,19 @@ if predictor is None:
 
 if not getattr(predictor, "is_loaded", False):
 
-    st.error(
-        "The trained ML model could not be loaded. "
-        "Check the model paths and deployment diagnostics."
-    )
+    load_error = getattr(predictor, "load_error", None)
 
-    st.info(
-        "The diagnostic output will help us determine whether "
-        "the problem is a missing artifact, an incorrect path, "
-        "or an error while loading the model."
-    )
+    st.error("The trained ML model could not be loaded.")
+
+    if load_error:
+        st.error(f"Detailed loading error: {load_error}")
+    else:
+        st.info(
+            "No detailed load_error was exposed by the imported "
+            "prediction module. Check the Prediction module path in "
+            "Model Loading Status and confirm the updated "
+            "src/prediction/prediction_helper.py was committed and pushed."
+        )
 
     st.stop()
 
