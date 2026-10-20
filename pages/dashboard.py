@@ -1,7 +1,7 @@
 """
 Executive Dashboard Page
 Displays high-level actuarial metrics, demographic distributions, interactive filters,
-and dynamic Plotly visualizations.
+and dynamic Plotly visualizations for the insurance portfolio.
 """
 
 import os
@@ -23,26 +23,17 @@ from src.analytics.analytics_helper import (
     create_cost_by_gender_chart,
     create_cost_by_region_chart,
     create_children_vs_cost_chart,
-    create_age_vs_cost_scatter
+    create_age_vs_cost_scatter,
+    create_risk_tier_donut_chart,
+    create_demographic_distribution_chart
 )
+
 
 @st.cache_data
 def load_data() -> pd.DataFrame:
     """Load the processed dataset or process the raw dataset."""
-
-    data_path = os.path.join(
-        PROJECT_ROOT,
-        "data",
-        "processed",
-        "insurance_processed.csv"
-    )
-
-    raw_path = os.path.join(
-        PROJECT_ROOT,
-        "data",
-        "raw",
-        "insurance_dataset.csv"
-    )
+    data_path = os.path.join(PROJECT_ROOT, "data", "processed", "insurance_processed.csv")
+    raw_path = os.path.join(PROJECT_ROOT, "data", "raw", "insurance_dataset.csv")
 
     try:
         if os.path.isfile(data_path):
@@ -50,15 +41,15 @@ def load_data() -> pd.DataFrame:
 
         if os.path.isfile(raw_path):
             from src.data_processing.preprocess import engineer_features
-
             return engineer_features(pd.read_csv(raw_path))
 
-        st.error("Dataset not found. Please verify the data files.")
+        st.error("Dataset not found. Please verify that the data files exist.")
         return pd.DataFrame()
 
     except Exception as exc:
         st.error(f"Unable to load dataset: {type(exc).__name__}: {exc}")
         return pd.DataFrame()
+
 
 def render_dashboard():
     # Hero Title Banner
@@ -66,7 +57,7 @@ def render_dashboard():
     <div class="hero-banner">
         <span class="hero-badge">Executive Overview</span>
         <div class="hero-title">AI Insurance Cost & Risk Analytics</div>
-        <div class="hero-subtitle">Predict • Analyze • Understand • Simulate</div>
+        <div class="hero-subtitle">Actuarial Cost Projections • Demographic Benchmarking • Risk Tier Stratification</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -76,7 +67,7 @@ def render_dashboard():
 
     # Filter Sidebar / Controls
     st.sidebar.markdown("### 🎛️ Dashboard Filters")
-    st.sidebar.caption("Filter portfolio data across demographic dimensions.")
+    st.sidebar.caption("Filter portfolio data across demographic and lifestyle dimensions.")
 
     # 1. Age Range
     min_age = int(df['age'].min())
@@ -90,7 +81,13 @@ def render_dashboard():
     # 3. BMI Range
     min_bmi = float(df['bmi'].min())
     max_bmi = float(df['bmi'].max())
-    selected_bmi = st.sidebar.slider("BMI Range", min_value=round(min_bmi, 1), max_value=round(max_bmi, 1), value=(min_bmi, max_bmi), step=0.1)
+    selected_bmi = st.sidebar.slider(
+        "BMI Range",
+        min_value=round(min_bmi, 1),
+        max_value=round(max_bmi, 1),
+        value=(round(min_bmi, 1), round(max_bmi, 1)),
+        step=0.1
+    )
 
     # 4. Smoking Status
     smoker_options = sorted(list(df['smoker'].unique()))
@@ -102,7 +99,11 @@ def render_dashboard():
 
     # 6. Children
     children_options = sorted(list(df['children'].unique()))
-    selected_children = st.sidebar.multiselect("Number of Children / Dependents", options=children_options, default=children_options)
+    selected_children = st.sidebar.multiselect(
+        "Number of Children / Dependents",
+        options=children_options,
+        default=children_options
+    )
 
     # Apply Filters
     filtered_df = df[
@@ -121,20 +122,20 @@ def render_dashboard():
     # Calculate KPIs on filtered data
     kpis = compute_kpis(filtered_df)
 
-    # KPI Cards Row 1
+    # KPI Cards Row 1: Primary Cost & Population Metrics
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         st.markdown(f"""
-        <div class="kpi-card">
+        <div class="kpi-card" style="border-top: 4px solid #0284c7;">
             <div class="kpi-title">Total Customers</div>
             <div class="kpi-value">{kpis['total_customers']:,}</div>
-            <div class="kpi-sub">Active Policyholders</div>
+            <div class="kpi-sub">Filtered Active Records</div>
         </div>
         """, unsafe_allow_html=True)
 
     with col2:
         st.markdown(f"""
-        <div class="kpi-card">
+        <div class="kpi-card" style="border-top: 4px solid #0284c7;">
             <div class="kpi-title">Average Cost</div>
             <div class="kpi-value">${kpis['avg_cost']:,.0f}</div>
             <div class="kpi-sub">Annual Mean Premium</div>
@@ -143,7 +144,7 @@ def render_dashboard():
 
     with col3:
         st.markdown(f"""
-        <div class="kpi-card">
+        <div class="kpi-card" style="border-top: 4px solid #6366f1;">
             <div class="kpi-title">Median Cost</div>
             <div class="kpi-value">${kpis['median_cost']:,.0f}</div>
             <div class="kpi-sub">50th Percentile Benchmark</div>
@@ -152,18 +153,18 @@ def render_dashboard():
 
     with col4:
         st.markdown(f"""
-        <div class="kpi-card">
-            <div class="kpi-title">High-Risk Share</div>
-            <div class="kpi-value" style="color:#ef4444;">{kpis['high_risk_pct']}%</div>
-            <div class="kpi-sub">Score ≥ 70 Risk Tier</div>
+        <div class="kpi-card" style="border-top: 4px solid #ef4444;">
+            <div class="kpi-title">Smoking Share</div>
+            <div class="kpi-value" style="color:#ef4444;">{kpis.get('smoker_pct', 0.0)}%</div>
+            <div class="kpi-sub">Active Tobacco Prevalence</div>
         </div>
         """, unsafe_allow_html=True)
 
-    # KPI Cards Row 2
+    # KPI Cards Row 2: Secondary Range & Demographic Metrics
     col5, col6, col7, col8 = st.columns(4)
     with col5:
         st.markdown(f"""
-        <div class="kpi-card">
+        <div class="kpi-card" style="border-top: 4px solid #10b981;">
             <div class="kpi-title">Minimum Cost</div>
             <div class="kpi-value">${kpis['min_cost']:,.0f}</div>
             <div class="kpi-sub">Lowest Observed Premium</div>
@@ -172,62 +173,72 @@ def render_dashboard():
 
     with col6:
         st.markdown(f"""
-        <div class="kpi-card">
+        <div class="kpi-card" style="border-top: 4px solid #f59e0b;">
             <div class="kpi-title">Maximum Cost</div>
             <div class="kpi-value">${kpis['max_cost']:,.0f}</div>
-            <div class="kpi-sub">Ceiling Claim Outlay</div>
+            <div class="kpi-sub">Highest Observed Premium</div>
         </div>
         """, unsafe_allow_html=True)
 
     with col7:
         st.markdown(f"""
-        <div class="kpi-card">
+        <div class="kpi-card" style="border-top: 4px solid #64748b;">
             <div class="kpi-title">Average Age</div>
-            <div class="kpi-value">{kpis['avg_age']} yrs</div>
+            <div class="kpi-value">{kpis['avg_age']} <span style="font-size:1.1rem;font-weight:500;">yrs</span></div>
             <div class="kpi-sub">Cohort Chronological Mean</div>
         </div>
         """, unsafe_allow_html=True)
 
     with col8:
         st.markdown(f"""
-        <div class="kpi-card">
-            <div class="kpi-title">Average BMI</div>
-            <div class="kpi-value">{kpis['avg_bmi']}</div>
-            <div class="kpi-sub">Body Mass Index Metric</div>
+        <div class="kpi-card" style="border-top: 4px solid #ef4444;">
+            <div class="kpi-title">High-Risk Share</div>
+            <div class="kpi-value" style="color:#ef4444;">{kpis['high_risk_pct']}%</div>
+            <div class="kpi-sub">Score ≥ 70 Risk Tier</div>
         </div>
         """, unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # Charts Section
-    tab1, tab2, tab3 = st.tabs(["📊 Cost Distributions & Demographics", "🔍 Lifestyle & Regional Analysis", "📈 Correlation & Trends"])
+    # Visualizations Section
+    tab1, tab2, tab3 = st.tabs([
+        "📊 Cost Distributions & Demographics",
+        "🔍 Lifestyle & Regional Analysis",
+        "🛡️ Risk Stratification & Trends"
+    ])
 
     with tab1:
         c1, c2 = st.columns(2)
         with c1:
-            st.plotly_chart(create_cost_distribution_chart(filtered_df), width='stretch')
+            st.plotly_chart(create_cost_distribution_chart(filtered_df), use_container_width=True)
         with c2:
-            st.plotly_chart(create_cost_by_age_group_chart(filtered_df), width='stretch')
+            st.plotly_chart(create_cost_by_age_group_chart(filtered_df), use_container_width=True)
+
+        c1b, c2b = st.columns(2)
+        with c1b:
+            st.plotly_chart(create_demographic_distribution_chart(filtered_df), use_container_width=True)
+        with c2b:
+            st.plotly_chart(create_cost_by_gender_chart(filtered_df), use_container_width=True)
 
     with tab2:
         c3, c4 = st.columns(2)
         with c3:
-            st.plotly_chart(create_cost_by_bmi_category_chart(filtered_df), width='stretch')
+            st.plotly_chart(create_cost_by_bmi_category_chart(filtered_df), use_container_width=True)
         with c4:
-            st.plotly_chart(create_cost_by_smoker_chart(filtered_df), width='stretch')
+            st.plotly_chart(create_cost_by_smoker_chart(filtered_df), use_container_width=True)
 
         c5, c6 = st.columns(2)
         with c5:
-            st.plotly_chart(create_cost_by_gender_chart(filtered_df), width='stretch')
+            st.plotly_chart(create_cost_by_region_chart(filtered_df), use_container_width=True)
         with c6:
-            st.plotly_chart(create_cost_by_region_chart(filtered_df), width='stretch')
+            st.plotly_chart(create_children_vs_cost_chart(filtered_df), use_container_width=True)
 
     with tab3:
         c7, c8 = st.columns(2)
         with c7:
-            st.plotly_chart(create_children_vs_cost_chart(filtered_df), width='stretch')
+            st.plotly_chart(create_risk_tier_donut_chart(filtered_df), use_container_width=True)
         with c8:
-            st.plotly_chart(create_age_vs_cost_scatter(filtered_df), width='stretch')
+            st.plotly_chart(create_age_vs_cost_scatter(filtered_df), use_container_width=True)
 
     # Download filtered dataset option
     st.markdown("---")
@@ -235,14 +246,18 @@ def render_dashboard():
         label="📥 Download Filtered Portfolio Data (CSV)",
         data=filtered_df.to_csv(index=False).encode('utf-8'),
         file_name='filtered_insurance_portfolio.csv',
-        mime='text/csv'
+        mime='text/csv',
+        use_container_width=True
     )
 
     st.markdown("""
     <div class="disclaimer-card">
-        <b>Data Integrity Notice:</b> This dashboard operates on a <b>Synthetic/Demo Dataset</b> generated for actuarial modeling and ML risk estimation demonstration. It is not derived from proprietary insurer internal policyholder files.
+        <b>Data Integrity Notice:</b> This dashboard operates on a synthetic actuarial demonstration dataset
+        (6,000 synthesized policyholder records) designed to model realistic healthcare cost distributions
+        without using private policyholder records.
     </div>
     """, unsafe_allow_html=True)
+
 
 if __name__ == '__main__' or (hasattr(st, 'runtime') and st.runtime.exists()):
     render_dashboard()

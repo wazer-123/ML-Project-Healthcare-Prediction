@@ -65,29 +65,44 @@ def compute_kpis(df: pd.DataFrame) -> Dict[str, Any]:
             'max_cost': 0.0,
             'avg_age': 0.0,
             'avg_bmi': 0.0,
-            'high_risk_pct': 0.0
+            'high_risk_pct': 0.0,
+            'smoker_pct': 0.0,
+            'low_risk_pct': 0.0,
+            'medium_risk_pct': 0.0
         }
 
     total = len(df)
-    avg_cost = df['charges'].mean()
-    median_cost = df['charges'].median()
-    min_cost = df['charges'].min()
-    max_cost = df['charges'].max()
-    avg_age = df['age'].mean()
-    avg_bmi = df['bmi'].mean()
+    avg_cost = df['charges'].mean() if 'charges' in df.columns else 0.0
+    median_cost = df['charges'].median() if 'charges' in df.columns else 0.0
+    min_cost = df['charges'].min() if 'charges' in df.columns else 0.0
+    max_cost = df['charges'].max() if 'charges' in df.columns else 0.0
+    avg_age = df['age'].mean() if 'age' in df.columns else 0.0
+    avg_bmi = df['bmi'].mean() if 'bmi' in df.columns else 0.0
+
+    smoker_count = len(df[df['smoker'].astype(str).str.lower().str.strip() == 'yes']) if 'smoker' in df.columns else 0
+    smoker_pct = (smoker_count / total * 100.0) if total > 0 else 0.0
 
     high_risk_count = len(df[df['risk_category'] == 'HIGH']) if 'risk_category' in df.columns else 0
     high_risk_pct = (high_risk_count / total * 100.0) if total > 0 else 0.0
 
+    medium_risk_count = len(df[df['risk_category'] == 'MEDIUM']) if 'risk_category' in df.columns else 0
+    medium_risk_pct = (medium_risk_count / total * 100.0) if total > 0 else 0.0
+
+    low_risk_count = len(df[df['risk_category'] == 'LOW']) if 'risk_category' in df.columns else 0
+    low_risk_pct = (low_risk_count / total * 100.0) if total > 0 else 0.0
+
     return {
         'total_customers': total,
-        'avg_cost': round(avg_cost, 2),
-        'median_cost': round(median_cost, 2),
-        'min_cost': round(min_cost, 2),
-        'max_cost': round(max_cost, 2),
-        'avg_age': round(avg_age, 1),
-        'avg_bmi': round(avg_bmi, 1),
-        'high_risk_pct': round(high_risk_pct, 1)
+        'avg_cost': round(float(avg_cost), 2),
+        'median_cost': round(float(median_cost), 2),
+        'min_cost': round(float(min_cost), 2),
+        'max_cost': round(float(max_cost), 2),
+        'avg_age': round(float(avg_age), 1),
+        'avg_bmi': round(float(avg_bmi), 1),
+        'high_risk_pct': round(float(high_risk_pct), 1),
+        'smoker_pct': round(float(smoker_pct), 1),
+        'low_risk_pct': round(float(low_risk_pct), 1),
+        'medium_risk_pct': round(float(medium_risk_pct), 1)
     }
 
 def create_cost_distribution_chart(df: pd.DataFrame):
@@ -362,3 +377,77 @@ def create_scenario_comparison_chart(scenario_df: pd.DataFrame):
     )
     fig.update_traces(texttemplate='$%{text:,.0f}', textposition='outside')
     return apply_chart_style(fig, "What-If Scenario Cost Comparison", height=420)
+
+
+def create_correlation_heatmap(df: pd.DataFrame):
+    """Correlation matrix heatmap for continuous numerical columns."""
+    num_cols = [c for c in ['age', 'bmi', 'children', 'charges', 'risk_score'] if c in df.columns]
+    if len(num_cols) < 2:
+        return go.Figure()
+
+    corr = df[num_cols].corr()
+
+    labels_map = {
+        'age': 'Age',
+        'bmi': 'BMI',
+        'children': 'Children',
+        'charges': 'Annual Charges',
+        'risk_score': 'Risk Score'
+    }
+    clean_labels = [labels_map.get(c, c) for c in num_cols]
+
+    fig = px.imshow(
+        corr.values,
+        x=clean_labels,
+        y=clean_labels,
+        color_continuous_scale='Blues',
+        zmin=-1.0,
+        zmax=1.0,
+        text_auto='.2f',
+        labels=dict(color="Pearson Correlation")
+    )
+    fig.update_traces(textfont=dict(size=12))
+    return apply_chart_style(fig, "Actuarial Feature Correlation Matrix (Pearson r)", height=420)
+
+
+def create_risk_tier_donut_chart(df: pd.DataFrame):
+    """Donut chart illustrating customer distribution by risk tier."""
+    if 'risk_category' not in df.columns or df.empty:
+        return go.Figure()
+
+    counts = df['risk_category'].value_counts().reindex(['LOW', 'MEDIUM', 'HIGH']).fillna(0).reset_index()
+    counts.columns = ['Risk Tier', 'Count']
+
+    color_map = {'LOW': '#10b981', 'MEDIUM': '#f59e0b', 'HIGH': '#ef4444'}
+    colors = [color_map.get(tier, '#0284c7') for tier in counts['Risk Tier']]
+
+    fig = go.Figure(data=[go.Pie(
+        labels=counts['Risk Tier'],
+        values=counts['Count'],
+        hole=0.55,
+        marker=dict(colors=colors),
+        textinfo='label+percent',
+        hoverinfo='label+value+percent'
+    )])
+    return apply_chart_style(fig, "Customer Distribution by Risk Tier", height=380)
+
+
+def create_demographic_distribution_chart(df: pd.DataFrame):
+    """Grouped bar chart showing customer population across age brackets and gender."""
+    if 'age_group' not in df.columns or 'sex' not in df.columns or df.empty:
+        return go.Figure()
+
+    agg = df.groupby(['age_group', 'sex']).size().reset_index()
+    agg.columns = ['age_group', 'sex', 'Count']
+    fig = px.bar(
+        agg,
+        x='age_group',
+        y='Count',
+        color='sex',
+        barmode='group',
+        color_discrete_sequence=['#8b5cf6', '#0284c7'],
+        labels={'age_group': 'Age Group', 'Count': 'Customer Count', 'sex': 'Gender'}
+    )
+    fig.update_traces(textposition='outside')
+    return apply_chart_style(fig, "Demographic Distribution by Age Group & Gender", height=380)
+

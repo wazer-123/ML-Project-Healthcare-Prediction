@@ -129,12 +129,12 @@ def render_scenario_analysis():
         df_display['Difference (%)'] = df_display['Percentage Difference'].apply(lambda x: f"{'+' if x >= 0 else ''}{x}%")
 
         table_cols = ['Scenario', 'Age', 'Gender', 'BMI', 'Smoker', 'Children', 'Region', 'Annual Cost', 'Monthly Cost', 'Difference ($)', 'Difference (%)', 'Risk Category']
-        st.dataframe(df_display[table_cols], width='stretch', hide_index=True)
+        st.dataframe(df_display[table_cols], use_container_width=True, hide_index=True)
 
         st.markdown("<br>", unsafe_allow_html=True)
 
         # Plotly Comparison Chart
-        st.plotly_chart(create_scenario_comparison_chart(df_scenarios), width='stretch')
+        st.plotly_chart(create_scenario_comparison_chart(df_scenarios), use_container_width=True)
 
         # CSV Download
         csv_data = df_scenarios.to_csv(index=False).encode('utf-8')
@@ -142,7 +142,8 @@ def render_scenario_analysis():
             label="📥 Download Scenario Comparison (CSV)",
             data=csv_data,
             file_name="insurance_what_if_scenarios.csv",
-            mime="text/csv"
+            mime="text/csv",
+            use_container_width=True
         )
 
     # TAB 2: Real-Time Sensitivity Adjustment

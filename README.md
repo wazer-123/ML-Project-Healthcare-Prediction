@@ -1,95 +1,104 @@
-# AI-Powered Insurance Cost & Risk Analytics Dashboard
+# Insurance Cost Predictor & Actuarial Risk Analytics
 
-An enterprise-grade, multi-page machine learning and actuarial analytics web application built with **Python, Streamlit, Scikit-learn, and Plotly**. Designed to evaluate individual insurance cost projections, model cohort risks, execute what-if sensitivity analyses, and inspect predictive machine learning diagnostics.
+An enterprise-grade, multi-page machine learning and actuarial analytics web application built with **Python, Streamlit, Scikit-learn, and Plotly**. The application delivers real-time machine learning cost inference, heuristic risk indexing, what-if sensitivity simulations, and exploratory demographic analytics for healthcare insurance portfolio evaluation.
+
+Deployed on **Streamlit Community Cloud**: [Live Application](https://github.com/wazer-123/ML-Project-Healthcare-Prediction)
 
 ---
 
 ## 📑 Table of Contents
 1. [Project Overview](#-project-overview)
 2. [Problem Statement & Objectives](#-problem-statement--objectives)
-3. [Key Architectural Features](#-key-architectural-features)
+3. [Key Application Modules](#-key-application-modules)
 4. [Technology Stack](#-technology-stack)
 5. [Dataset Information](#-dataset-information)
-6. [Machine Learning Workflow](#-machine-learning-workflow)
-7. [Model Comparison & Benchmark Results](#-model-comparison--benchmark-results)
-8. [Project Structure](#-project-structure)
-9. [Installation & Setup (Windows)](#-installation--setup-windows)
-10. [Model Training Instructions](#-model-training-instructions)
+6. [Machine Learning & MLOps Workflow](#-machine-learning--mlops-workflow)
+7. [Model Benchmarking & Evaluation](#-model-benchmarking--evaluation)
+8. [Project Architecture](#-project-architecture)
+9. [Project Directory Structure](#-project-directory-structure)
+10. [Local Installation & Setup](#-local-installation--setup)
 11. [Running the Application](#-running-the-application)
-12. [Risk Logic & Non-Causal Disclaimers](#-risk-logic--non-causal-disclaimers)
-13. [Limitations & Future Enhancements](#-limitations--future-enhancements)
+12. [Automated Testing & Quality Assurance](#-automated-testing--quality-assurance)
+13. [Streamlit Community Cloud Deployment](#-streamlit-community-cloud-deployment)
+14. [Risk Logic & Non-Causal Ethical Disclaimers](#-risk-logic--non-causal-ethical-disclaimers)
+15. [Limitations & Future Enhancements](#-limitations--future-enhancements)
 
 ---
 
 ## 🔍 Project Overview
 
-The **AI-Powered Insurance Cost & Risk Analytics Dashboard** bridges predictive machine learning and actuarial health economics. Instead of simple, isolated single-page prediction forms, this platform provides an executive suite featuring:
-- Dynamic portfolio dashboards with multi-dimensional filtering
-- Real-time ML inference with actuarial risk scoring
-- Calibrated risk gauge visualizers with documented tier logic
-- Deep demographic and lifestyle exploratory analytics
-- Multi-model evaluation benchmarking (Linear Regression, Random Forest, Gradient Boosting)
-- High-fidelity What-If scenario simulations and sensitivity tools
-- Comprehensive dataset governance and custom interactive charting
+The **Insurance Cost Predictor** bridges predictive machine learning and actuarial health economics. Instead of isolated single-page prediction forms, this platform provides an integrated suite for portfolio analysts, data scientists, and underwriters:
+- **Executive Overview Dashboard:** Macro-level KPI cards, demographic distributions, and multi-dimensional filtering.
+- **Real-Time ML Inference:** Predictive cost estimation with prorated monthly figures and heuristic risk indexing.
+- **Actuarial Risk Profiling:** Calibrated Plotly Gauge visualizers with documented tier threshold logic.
+- **Demographic & Cost Analytics:** Deep multi-tab exploratory analyses distinguishing correlation from causality.
+- **Multi-Model MLOps Benchmarking:** Direct empirical comparison of Linear Regression, Random Forest, and Gradient Boosting algorithms on a 20% holdout test partition.
+- **What-If Scenario Simulation:** Multi-cohort comparative matrices and real-time sensitivity sliders isolating marginal cost drivers.
+- **Data Governance & Query Explorer:** Schema auditing, completeness tracking, custom visual query builder, and CSV exports.
 
 ---
 
 ## 🎯 Problem Statement & Objectives
 
 ### Problem Statement
-Healthcare insurance underwriting and premium estimation require balanced assessment of biological, demographic, and lifestyle risks. Underwriters and risk analysts need interactive simulation tools to test marginal cost sensitivities, diagnose algorithmic behavior, and understand non-linear interactions (e.g., the compounding risk of high BMI combined with smoking).
+Healthcare insurance underwriting and premium estimation require balanced assessment of biological, demographic, and lifestyle risk proxies. Underwriters and risk analysts need interactive simulation tools to test marginal cost sensitivities, diagnose algorithmic behavior, and understand compound interactions (such as the combined risk of high BMI and smoking).
 
-### Objectives
-1. **Actuarial Accuracy:** Train and benchmark multiple regression algorithms to achieve high prediction fidelity ($R^2 > 0.95$).
+### Project Objectives
+1. **Actuarial Prediction Accuracy:** Train and benchmark candidate regression algorithms to achieve high prediction fidelity ($R^2 > 0.99$ on holdout test data).
 2. **Explainability & Governance:** Provide non-causal statistical associations and feature importances to avoid misleading causal assumptions.
 3. **Interactive Simulation:** Empower analysts to create and compare multi-applicant scenarios in real-time.
 4. **Data Transparency:** Offer complete data exploration, summary statistics, and CSV data export across all pages.
+5. **Production Reliability:** Ensure full compatibility with Streamlit Community Cloud and maintain an automated test suite.
 
 ---
 
-## 🚀 Key Architectural Features
+## 🚀 Key Application Modules
 
-### 1. Executive Dashboard
-- **KPI Summary Cards:** Total Customers, Average Cost, Median Cost, High-Risk Percentage, Min/Max Costs, Average Age, and Average BMI.
-- **Interactive Plotly Visualizations:** Cost distribution with KDE, cost by age group, cost by BMI category, smoker breakdown, gender analysis, regional comparison, and age vs cost scatter plots.
-- **Multi-Dimensional Filters:** Age range, gender, BMI range, smoking status, region, and dependents filter with instant chart updates.
+### 1. Executive Dashboard (`pages/dashboard.py`)
+- **Executive KPI Cards:** Total customers, average cost, median cost (50th percentile benchmark), smoking prevalence, min/max costs, average age, and high-risk cohort share.
+- **Interactive Visualizations:** Annual charges distribution with box-plot marginals, cost by age group, demographic distribution by gender, BMI category breakdown, smoking impact box plots, and regional variations.
+- **Multi-Dimensional Filters:** Age slider, gender multi-select, BMI slider, smoking status, region, and dependent count with instantaneous reactive chart updates.
 - **Filtered Export:** Download filtered portfolio subsets directly as CSV.
 
-### 2. Insurance Cost Predictor
+### 2. Insurance Cost Predictor (`pages/predictor.py`)
 - Real-time inference powered by the winning serialized production model (`Gradient Boosting Regressor`).
-- Outputs: Predicted Annual Cost, Prorated Monthly Cost, Model Risk Score (0-100), and Risk Classification Tier (`LOW`, `MEDIUM`, `HIGH`).
-- **Prediction Insights:** Granular breakdown of feature factors *associated with the model prediction* without claiming causal guarantees.
+- Outputs: Predicted Annual Cost, Prorated Monthly Cost, Actuarial Risk Score (0–100), and Risk Classification Tier (`LOW`, `MEDIUM`, `HIGH`).
+- **Prediction Insights:** Granular breakdown of feature factors *associated with the model prediction* without claiming deterministic causal guarantees.
 - Individual applicant record export as CSV.
 
-### 3. Customer Risk Profile
-- Categorical demographic classifications: Age category, BMI classification, smoking status, dependents, region, and predicted premium.
+### 3. Customer Risk Profile (`pages/risk_profile.py`)
+- Categorical demographic classifications: Age category, BMI classification, smoking status, dependents, region, and projected premium.
 - Calibrated Plotly Gauge Chart with colored threshold bands:
   - **LOW Risk (0.0 – 34.9):** Non-smokers with standard BMI and lower claim frequency profiles.
   - **MEDIUM Risk (35.0 – 69.9):** Elevated BMI or senior age brackets.
   - **HIGH Risk (70.0 – 100.0):** Smokers, clinical obesity (BMI ≥ 30), or compound risk interactions.
-- Regulatory advisory disclaimers.
+- Comprehensive explanation of heuristic scoring limitations.
 
-### 4. Cost & Demographic Analytics
+### 4. Cost & Demographic Analytics (`pages/analytics.py`)
 - Continuous factor correlation: Age vs Cost (trendline stratified by smoking) and BMI vs Cost (obesity threshold breakdown).
 - Demographic analysis: Cost by gender, region, age group, and dependent counts.
 - Risk segmentation: Distribution of insurance charges by risk category.
+- Pearson correlation matrix heatmap for numeric variables (`age`, `bmi`, `children`, `charges`, `risk_score`).
+- Missing-value audit and parametric summary statistics.
 
-### 5. Model Performance & Diagnostics
+### 5. Model Performance & Diagnostics (`pages/model_performance.py`)
 - Multi-model comparison table: MAE, MSE, RMSE, and $R^2$ across Linear Regression, Random Forest, and Gradient Boosting.
 - Automated winning model selection based on highest test $R^2$ and lowest RMSE.
 - Actual vs Predicted regression charts with 45-degree ideal line.
 - Residual scatter plots ($y_{pred}$ vs $residuals$) and error distribution histograms.
 - Global feature importance horizontal ranking.
+- Protected retraining controls with administrative confirmation.
 
-### 6. What-If Scenario Analysis
+### 6. What-If Scenario Analysis (`pages/scenario_analysis.py`)
 - **Multi-Cohort Comparison:** Compare Scenario A (Young Healthy), Scenario B (Mid-Age Overweight Smoker), Scenario C (Senior Obese Smoker), and Custom Scenario D.
 - Calculates exact dollar difference ($\pm\$$) and percentage difference ($\pm\%$) from baseline.
 - **Real-Time Baseline Sensitivity Simulator:** Live sliders for Age, BMI, Smoking, Children, Region, and Gender with real-time marginal deviation readouts.
 - Export scenario matrix as CSV.
 
-### 7. Data Explorer
-- Portfolio metadata audit: Total records, feature count, missing value validation, and memory usage.
+### 7. Data Explorer (`pages/data_explorer.py`)
+- Portfolio metadata audit: Total records, feature count, missing value validation, and memory footprint.
 - Schema inspection: Data types, null counts, unique values, and sample values.
+- Searchable and filterable record inspection tab.
 - Statistical descriptions for continuous and categorical attributes.
 - **Interactive Visual Query Builder:** Select any X-axis, Y-axis, Color grouping, and Chart Type (Scatter, Box, Histogram, Bar, Violin) on the fly.
 - Export full dataset as CSV.
@@ -98,80 +107,77 @@ Healthcare insurance underwriting and premium estimation require balanced assess
 
 ## 🛠️ Technology Stack
 
-| Component | Library / Framework | Version |
-| :--- | :--- | :--- |
-| **Language** | Python | 3.13.1 |
-| **Web Interface** | Streamlit | ≥ 1.36.0 |
-| **Data Manipulation** | Pandas, NumPy | ≥ 2.0.0 |
-| **Machine Learning** | Scikit-Learn | ≥ 1.3.0 |
-| **Interactive Charts** | Plotly | ≥ 5.18.0 |
-| **Model Persistence** | Joblib | ≥ 1.3.0 |
+| Layer | Technology | Version | Purpose |
+| :--- | :--- | :--- | :--- |
+| **Language** | Python | 3.13.1 | Core application and ML logic |
+| **Web Framework** | Streamlit | 1.53.1 | Multi-page reactive web application |
+| **Data Processing** | Pandas | 2.3.3 | DataFrame manipulation and aggregations |
+| **Numeric Computing**| NumPy | 2.4.1 | Vectorized computations and mathematical arrays |
+| **Machine Learning** | Scikit-Learn | 1.7.0 | Preprocessing pipeline, regression models, metrics |
+| **Data Visualization**| Plotly | ≥ 5.18.0 | Interactive web-based charts, gauges, heatmaps |
+| **Serialization** | Joblib | 1.5.1 | Model and pipeline persistence |
+| **Testing** | Pytest | ≥ 8.0.0 | Unit, integration, and regression test suites |
 
 ---
 
 ## 📊 Dataset Information
 
-- **Dataset Provenance:** **Synthetic/Demo Dataset** (6,000 records).
-- **Labeling:** Explicitly designated as synthetic actuarial demo data; not presented as proprietary real-company records.
+- **Dataset Provenance:** **Synthetic Actuarial Demonstration Dataset** (6,000 policyholder records).
+- **Design:** Explicitly designated as synthetic actuarial demo data; not presented as proprietary real-company records.
 - **Features Included:**
-  1. `age`: Integer (18 – 65)
-  2. `sex`: Categorical (`male`, `female`)
-  3. `bmi`: Float (15.0 – 53.0)
-  4. `children`: Integer (0 – 5)
-  5. `smoker`: Categorical (`yes`, `no`)
-  6. `region`: Categorical (`southwest`, `southeast`, `northwest`, `northeast`)
-  7. `charges`: Continuous target variable ($1,120 – $65,000)
+  1. `age`: Chronological age in years (18 – 65)
+  2. `sex`: Biological gender (`male`, `female`)
+  3. `bmi`: Body Mass Index in $\text{kg}/\text{m}^2$ (15.0 – 53.0)
+  4. `children`: Number of dependent children (0 – 5)
+  5. `smoker`: Tobacco smoking status (`yes`, `no`)
+  6. `region`: Residential region (`southwest`, `southeast`, `northwest`, `northeast`)
+  7. `charges`: Continuous target variable representing annual medical cost ($1,120 – $65,000)
 
 ---
 
-## 🧠 Machine Learning Workflow
+## 🧠 Machine Learning & MLOps Workflow
 
-```
-Raw Dataset Generation (6,000 samples)
-       ↓
-Schema Validation & Cleaning
-       ↓
-Feature Engineering (BMI Category, Age Group, Risk Scoring)
-       ↓
-Train / Test Split (80% Train, 20% Test, Seed 42)
-       ↓
-Scikit-Learn Pipeline (StandardScaler for numerics, OneHotEncoder for categoricals)
-       ↓
-Multi-Model Training (Linear Regression, Random Forest, Gradient Boosting)
-       ↓
-Evaluation Diagnostics (MAE, MSE, RMSE, R²)
-       ↓
-Automated Best Model Selection
-       ↓
-Artifact Serialization (Joblib: best_model.pkl & preprocessing_pipeline.pkl)
-       ↓
-Interactive Streamlit Dashboard & Live Inference
+```mermaid
+flowchart TD
+    A[Raw Dataset: 6,000 samples] --> B[Schema Validation & Hygiene]
+    B --> C[Feature Engineering: Age Groups, BMI Categories, Risk Scoring]
+    C --> D[Stratified 80/20 Train-Test Split]
+    D --> E[Scikit-Learn ColumnTransformer]
+    E --> F1[Linear Regression]
+    E --> F2[Random Forest Regressor]
+    E --> F3[Gradient Boosting Regressor]
+    F1 --> G[Holdout Evaluation: MAE, RMSE, MSE, R²]
+    F2 --> G
+    F3 --> G
+    G --> H[Automated Winning Model Selection: Gradient Boosting]
+    H --> I[Joblib Serialization: models/best_model.pkl & preprocessing_pipeline.pkl]
+    I --> J[Streamlit Multi-Page UI & Real-Time Inference]
 ```
 
 ---
 
-## 🏆 Model Comparison & Benchmark Results
+## 🏆 Model Benchmarking & Evaluation
 
-Evaluated on held-out 20% test partition (1,200 samples):
+Models were evaluated on a held-out 20% test partition (1,200 samples) with fixed `random_state=42`:
 
-| Model Architecture | Test $R^2$ Score | RMSE ($) | MAE ($) | Status |
-| :--- | :--- | :--- | :--- | :--- |
-| **Gradient Boosting Regressor** | **0.9921** | **$1,018.01** | **$796.47** | 🏆 **ACTIVE PRODUCTION** |
-| **Random Forest Regressor** | 0.9906 | $1,109.44 | $881.89 | Candidate |
-| **Linear Regression** | 0.8725 | $4,091.43 | $2,828.53 | Candidate Baseline |
+| Model Architecture | Test $R^2$ Score | RMSE ($) | MAE ($) | MSE ($^2$) | Production Status |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Gradient Boosting Regressor** | **0.9921** | **$1,018.01** | **$796.47** | **$1,036,352** | 🏆 **ACTIVE PRODUCTION** |
+| **Random Forest Regressor** | 0.9906 | $1,109.44 | $881.89 | $1,230,858 | Candidate |
+| **Linear Regression** | 0.8725 | $4,091.43 | $2,828.53 | $16,739,783 | Candidate Baseline |
 
-*Selection Criterion:* Winning model automatically selected based on highest test $R^2$ score and lowest test RMSE.
+*Selection Criterion:* The winning model was selected automatically based on achieving the highest test $R^2$ and lowest test RMSE.
 
 ---
 
-## 📁 Project Structure
+## 📁 Project Directory Structure
 
 ```
 Insurance-Cost-AI/
-├── app.py                            # Application entry point with Streamlit navigation
-├── requirements.txt                  # Python dependencies
-├── README.md                         # Comprehensive project documentation
-├── .gitignore                        # Git exclusion rules
+├── app.py                            # Streamlit entry point with st.navigation
+├── requirements.txt                  # Python dependencies with pinned versions
+├── README.md                         # Portfolio documentation
+├── pyrightconfig.json                # Static typing & Pylance configuration
 │
 ├── data/
 │   ├── raw/
@@ -180,34 +186,41 @@ Insurance-Cost-AI/
 │       └── insurance_processed.csv   # Feature-engineered processed dataset
 │
 ├── models/
-│   ├── best_model.pkl                # Serialized winning production model
+│   ├── best_model.pkl                # Serialized GradientBoostingRegressor
 │   ├── preprocessing_pipeline.pkl   # Fitted Scikit-Learn ColumnTransformer
-│   ├── all_models.pkl               # Serialized candidate models
-│   └── model_evaluation_report.json # Comprehensive evaluation metrics & diagnostics
+│   ├── all_models.pkl               # Serialized candidate models dictionary
+│   └── model_evaluation_report.json # Benchmark metrics, residuals & importances
 │
 ├── src/
 │   ├── data_processing/
-│   │   ├── generate_dataset.py       # Actuarial synthetic data generation script
-│   │   └── preprocess.py             # Feature engineering & preprocessing pipeline
-│   │
+│   │   ├── generate_dataset.py       # Actuarial synthetic data generation
+│   │   └── preprocess.py             # Feature engineering & preprocessing transformer
 │   ├── models/
-│   │   ├── evaluate_models.py        # Actuarial metric calculation (MAE, RMSE, R²)
-│   │   └── train_models.py           # Multi-model training, benchmarking & selection
-│   │
+│   │   ├── evaluate_models.py        # Regression metrics calculation (MAE, RMSE, R²)
+│   │   └── train_models.py           # Multi-model training, benchmarking & serialization
 │   ├── prediction/
-│   │   └── prediction_helper.py      # Real-time inference & explanation engine
-│   │
+│   │   └── prediction_helper.py      # Inference engine, error logging & explanations
 │   └── analytics/
 │       └── analytics_helper.py       # Plotly chart generators & KPI calculators
 │
 ├── pages/
 │   ├── dashboard.py                  # Executive Dashboard with KPI cards & filters
-│   ├── predictor.py                  # Insurance Cost Predictor & Insights
-│   ├── risk_profile.py               # Customer Risk Profile & Gauge Visualizer
-│   ├── analytics.py                  # Cost & Demographic Analytics
-│   ├── model_performance.py          # Model Benchmarks, Residuals & Explainability
-│   ├── scenario_analysis.py          # Multi-Cohort & Real-Time What-If Simulator
-│   └── data_explorer.py              # Data Audit, Statistics & Custom Visualizer
+│   ├── predictor.py                  # Insurance Cost Predictor & Risk Gauge
+│   ├── risk_profile.py               # Customer Risk Profile & Documented Logic
+│   ├── analytics.py                  # Cost & Demographic Analytics with Heatmap
+│   ├── model_performance.py          # Model Benchmarks, Residuals & Governance
+│   ├── scenario_analysis.py          # Multi-Cohort & Real-Time Sensitivity Tool
+│   └── data_explorer.py              # Schema Audit, Searchable Grid & Custom Builder
+│
+├── tests/
+│   ├── test_pipeline.py              # End-to-end dataset & model verification
+│   ├── test_prediction_engine.py     # Inference matrix across boundary values
+│   ├── test_model_validation.py      # Artifact reproducibility & metric accuracy
+│   ├── test_pages.py                 # Multi-page execution & import health
+│   ├── test_edge_cases.py            # Missing columns, extreme inputs, null guards
+│   ├── test_dashboard_pages.py       # Page rendering & filtering stability
+│   ├── test_comprehensive.py         # Full regression suite (166 tests)
+│   └── test_stability.py             # Long-running runtime stability checks
 │
 └── assets/
     └── style.css                     # Custom styling, Inter typography & glassmorphism
@@ -215,76 +228,102 @@ Insurance-Cost-AI/
 
 ---
 
-## 💻 Installation & Setup (Windows)
+## 💻 Local Installation & Setup
 
-Open PowerShell or Command Prompt:
+### Prerequisites
+- Python 3.11 – 3.13
+- Git
 
-### 1. Clone or Navigate to the Project Folder
-```powershell
-cd Healthcare_Insurance/Insurance-Cost-AI
+### 1. Clone the Repository
+```bash
+git clone https://github.com/wazer-123/ML-Project-Healthcare-Prediction.git
+cd ML-Project-Healthcare-Prediction
 ```
 
-### 2. Create and Activate Virtual Environment
-```powershell
+### 2. Create and Activate a Virtual Environment
+```bash
+# Windows (PowerShell)
 python -m venv venv
 venv\Scripts\activate
+
+# macOS / Linux
+python3 -m venv venv
+source venv/bin/activate
 ```
 
-### 3. Install Dependencies
-```powershell
+### 3. Install Required Dependencies
+```bash
 pip install -r requirements.txt
 ```
 
 ---
 
-## ⚙️ Model Training Instructions
-
-To execute the data generation, feature engineering, and model training pipeline from scratch:
-
-```powershell
-python src/models/train_models.py
-```
-
-This script will:
-1. Generate the 6,000-record synthetic insurance dataset in `data/raw/`.
-2. Apply feature engineering and save the processed dataset to `data/processed/`.
-3. Train Linear Regression, Random Forest, and Gradient Boosting models.
-4. Evaluate test metrics, pick the winning model, and save artifacts in `models/`.
-
----
-
 ## 🖥️ Running the Application
 
-Launch the Streamlit web application:
+Launch the Streamlit dashboard locally:
 
-```powershell
+```bash
 streamlit run app.py
 ```
 
-The application will launch in your browser at `http://localhost:8501`.
+The application will launch in your default web browser at `http://localhost:8501`.
 
 ---
 
-## ⚖️ Risk Logic & Non-Causal Disclaimers
+## 🧪 Automated Testing & Quality Assurance
 
-### Explanation Wording Standard
-In accordance with ethical AI guidelines, feature influences are strictly designated as:
-> *"associated with the model prediction"*
+The project includes an extensive test suite covering data validation, preprocessing, model inference, boundary inputs, and page rendering.
 
-No claims of direct causality or absolute clinical etiology are made.
+Run the test suite with `pytest`:
 
-### Underwriting Advisory Notice
-All risk indices, scores, and dollar projections are generated via predictive regression models for estimation, comparative benchmarking, and educational demonstration. They do **not** constitute formal underwriting decisions, binding policy quotes, or clinical medical evaluations.
+```bash
+python -m pytest tests/
+```
+
+**Test Suite Coverage Summary:**
+- **166 automated test cases** passing across 8 test suites.
+- Validates data hygiene, schema invariance, model serialization, numerical bounds, exception handling, and UI page imports.
+
+---
+
+## ☁️ Streamlit Community Cloud Deployment
+
+This project is configured for deployment on **Streamlit Community Cloud**:
+1. Fork or push this repository to GitHub.
+2. Sign in to [Streamlit Community Cloud](https://share.streamlit.io/).
+3. Create a new app and link your repository.
+4. Set **Main file path** to `app.py`.
+5. Select Python **3.11** or **3.12** / **3.13** runtime.
+6. The app will install dependencies from `requirements.txt` and launch automatically.
+
+---
+
+## ⚖️ Risk Logic & Non-Causal Ethical Disclaimers
+
+### Non-Causal Language Standard
+In compliance with ethical AI principles and data science best practices, feature relationships are strictly described as:
+> *"associated with the model prediction in the historical training sample"*
+
+The application explicitly avoids declaring that a given feature directly *causes* cost increases.
+
+### Underwriting Advisory Disclaimer
+All cost projections, risk scores, and tier classifications are generated by statistical machine learning regression models for scenario evaluation, demographic benchmarking, and portfolio demonstration. They do **not** constitute formal insurance underwriting decisions, binding policy rate quotations, or medical diagnoses.
 
 ---
 
 ## 🔮 Limitations & Future Enhancements
 
-### Current Limitations
-- Operates on a synthetic cohort generated to simulate realistic actuarial relationships.
-- Does not incorporate longitudinal electronic health record (EHR) time-series data or detailed prescription drug histories.
+### Limitations
+- **Synthetic Data:** The dataset is synthetic and demonstrates actuarial machine learning workflows rather than proprietary carrier claims.
+- **Cross-Sectional Scope:** Does not incorporate longitudinal electronic health record (EHR) time-series data or pharmaceutical prescription claims.
 
 ### Future Enhancements
-- Integration of geospatial zip-code level socio-economic health indices.
-- Support for family plan joint-underwriting risk pooling simulations.
-- Automated API endpoints via FastAPI for microservice integration.
+- Integration of socio-economic zip-code rating indices (SDOH factors).
+- Joint policyholder family-plan underwriting risk pooling simulations.
+- Automated REST API endpoints via FastAPI for microservice consumption.
+
+---
+
+## 👤 Author & Acknowledgments
+
+Developed by **Wazer** as a portfolio project demonstrating end-to-end Machine Learning Engineering, Actuarial Data Analytics, UI/UX Design, and Production Deployment.

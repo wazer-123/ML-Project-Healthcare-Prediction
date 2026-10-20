@@ -440,6 +440,9 @@ class InsurancePredictor:
             "dependents": children_clean,
             "region": region_clean.capitalize(),
             "gender": sex_clean.capitalize(),
+            "sex": sex_clean.capitalize(),
+            "smoker": smoker_clean.capitalize(),
+            "children": children_clean,
             "explanation_insights": explanation_insights,
         }
 
