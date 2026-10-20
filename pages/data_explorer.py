@@ -19,14 +19,43 @@ from src.analytics.analytics_helper import apply_chart_style
 
 @st.cache_data
 def load_data() -> pd.DataFrame:
-    data_path = os.path.join(PROJECT_ROOT, 'data', 'processed', 'insurance_processed.csv')
-    if os.path.exists(data_path):
-        return pd.read_csv(data_path)
-    raw_path = os.path.join(PROJECT_ROOT, 'data', 'raw', 'insurance_dataset.csv')
-    if os.path.exists(raw_path):
-        from src.data_processing.preprocess import engineer_features
-        return engineer_features(pd.read_csv(raw_path))
-    return pd.DataFrame()
+    """Load the processed insurance dataset or process the raw dataset."""
+
+    data_path = os.path.join(
+        PROJECT_ROOT,
+        "data",
+        "processed",
+        "insurance_processed.csv"
+    )
+
+    raw_path = os.path.join(
+        PROJECT_ROOT,
+        "data",
+        "raw",
+        "insurance_dataset.csv"
+    )
+
+    try:
+        # Prefer the processed dataset
+        if os.path.isfile(data_path):
+            return pd.read_csv(data_path)
+
+        # Fall back to the raw dataset
+        if os.path.isfile(raw_path):
+            from src.data_processing.preprocess import engineer_features
+
+            return engineer_features(pd.read_csv(raw_path))
+
+        st.error(
+            "Dataset not found. Checked both processed and raw dataset paths."
+        )
+        return pd.DataFrame()
+
+    except Exception as exc:
+        st.error(
+            f"Dataset loading failed: {type(exc).__name__}: {exc}"
+        )
+        return pd.DataFrame()
 
 def render_data_explorer():
     st.markdown("""
